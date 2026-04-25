@@ -25,3 +25,20 @@
 
 # Run the Deployment
     npm run deploy
+
+
+
+
+
+# Add the resolved file
+    git add README.md
+
+# Commit the merge (you don't need a -m message, 
+# it will use a default merge message)
+    git commit
+
+# If you get stuck in a text editor (Vim), 
+# just type :wq and press Enter.
+
+# Finally, push your code
+    git push origin main
