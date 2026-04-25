@@ -1,0 +1,76 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isEmailVerified() {
+      return request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      // In a real app, we check a collection or a claim
+      // As per instructions, we can hardcode the bootstrap admin or check 'users' collection
+      // For speed and instructions, checking 'users/uid' for isAdmin field
+      return isSignedIn() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true ||
+         request.auth.token.email == 'www.assassingamerbd4@gmail.com');
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if (isSignedIn() && isOwner(userId) && (
+        // Prevent users from making themselves admins
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isAdmin'])
+      )) || isAdmin();
+    }
+
+    // --- Leads ---
+    match /leads/{leadId} {
+      // Only users with active packages can read leads
+      allow read: if isAdmin() || (
+        isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.currentPackage.status == 'Active'
+      );
+      allow write: if isAdmin();
+    }
+
+    // --- Transactions ---
+    match /transactions/{transactionId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // --- Soft Users ---
+    match /softUsers/{softUserId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // --- User Notifications ---
+    match /users/{userId}/notifications/{notificationId} {
+      allow read: if isSignedIn() && isOwner(userId);
+      allow write: if isAdmin() || (isSignedIn() && isOwner(userId));
+    }
+  }
+}

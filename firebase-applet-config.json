@@ -1,0 +1,11 @@
+{
+  "projectId": "unreal-leads",
+  "appId": "1:887294236293:web:3cfc13d8f71d330e48fbec",
+  "apiKey": "AIzaSyBlFnS50_L4r3VtF7zoBnY30HxVX_bmWEs",
+  "authDomain": "unreal-leads.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "databaseURL": "https://unreal-leads-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "storageBucket": "unreal-leads.firebasestorage.app",
+  "messagingSenderId": "887294236293",
+  "measurementId": "G-ZCERS03YWE"
+}

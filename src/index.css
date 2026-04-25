@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand: #38BDF8; /* Sky 400 */
+  --color-brand-dark: #0EA5E9; /* Sky 500 */
+  --color-surface: #0F172A; /* Slate 900 */
+  --color-surface-hover: #1E293B; /* Slate 800 */
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-200 font-sans;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.02) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+.glass {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.active-status {
+  background: linear-gradient(90deg, #10B981, #059669);
+}
+
+.ended-status {
+  background: linear-gradient(90deg, #EF4444, #DC2626);
+}
+
+.neo-shadow {
+  box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+}
+
+.bottom-nav-blur {
+  backdrop-filter: blur(16px);
+  background: rgba(15, 23, 42, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.3);
+}

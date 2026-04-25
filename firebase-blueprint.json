@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Extended user profile data containing subscription and history details.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "whatsApp": { "type": "string" },
+        "isAdmin": { "type": "boolean" },
+        "currentPackage": { "$ref": "PurchasedPackage" },
+        "purchaseHistory": { "type": "array", "items": { "$ref": "PurchasedPackage" } },
+        "transactionHistory": { "type": "array", "items": { "$ref": "Transaction" } },
+        "notifications": { "type": "array", "items": { "$ref": "Notification" } }
+      },
+      "required": ["uid", "email"]
+    },
+    "PurchasedPackage": {
+      "title": "Purchased Package",
+      "description": "Details about a subscription package purchased by a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "planId": { "type": "string" },
+        "planName": { "type": "string" },
+        "amountPaid": { "type": "number" },
+        "activationDate": { "type": "integer" },
+        "deadline": { "type": "integer" },
+        "status": { "type": "string", "enum": ["Active", "Ended", "Pending"] }
+      }
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Record of a payment attempt or completion.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "method": { "type": "string" },
+        "trxId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "failed"] },
+        "timestamp": { "type": "integer" },
+        "planId": { "type": "string" },
+        "whatsApp": { "type": "string" }
+      }
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "A single lead record from the 4 million database.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" },
+        "industry": { "type": "string" }
+      }
+    },
+    "SoftUser": {
+      "title": "Software User",
+      "description": "User account created by admin for external software access.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "createdAt": { "type": "integer" }
+      }
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System notification for a specific user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "integer" },
+        "read": { "type": "boolean" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Primary user profile storage."
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Global leads database."
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Global transaction logs for admin approval."
+    },
+    "/softUsers/{softUserId}": {
+      "schema": "SoftUser",
+      "description": "Admin-created software user accounts."
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User specific notifications."
+    }
+  }
+}
